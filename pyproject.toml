@@ -1,0 +1,55 @@
+[build-system]
+requires = ["pytest", "pytest-cov", "setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Flask-MQTT2"
+version = "2.0.0-dev0"
+requires-python = ">=3.11"
+authors = [
+    { name = "Stefan Lehmann", email = "stefan.st.lehmann@gmail.com" },
+    { name = "Simon Howroyd", email = "howroyd.work@gmail.com" },
+]
+maintainers = [
+    { name = "Simon Howroyd", email = "howroyd.work@gmail.com" },
+]
+description = "Flask extension for the MQTT protocol"
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ['mqtt', 'flask', 'paho']
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: MIT",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dynamic = ["dependencies"]
+
+[project.urls]
+"Repository" = "https://github.com/howroyd/Flask-MQTT2"
+"Bug Tracker" = "https://github.com/howroyd/Flask-MQTT2/issues"
+"Version 1" = "https://github.com/stlehmann/Flask-MQTT"
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.in"] }
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "ruff"]
+example = ["eventlet", "Flask", "Flask-Bootstrap", "Flask-MQTT", "Flask-SocketIO"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "2.0"
+python_files = ["tests/**/test_*.py", "tests/**/*_test.py"]
+addopts = [
+    "--cov=.",
+    "--cov-report=html",
+    "--cov-report=term-missing",
+    #  "--cov-fail-under=95",
+]
+filterwarnings = "ignore::DeprecationWarning"
