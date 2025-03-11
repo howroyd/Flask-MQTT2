@@ -134,12 +134,12 @@ app.config["MQTT_broker_url"] = "example.com"
 app.config["MQTT_broker_port"] = 8883
 mqtt = Mqtt(app)
 
-# create second mqtt client for a different broker 
+# create second mqtt client for a different broker
 app.config["MQTT2_broker_url"] = "example2.com"
 app.config["MQTT_broker_port"] = 1883
 mqtt2 = Mqtt(app, config_prefix="MQTT2")
 
-# create third mqtt client for a different broker 
+# create third mqtt client for a different broker
 app.config["MQTT3_broker_url"] = "example3.com"
 app.config["MQTT3_broker_port"] = 1885
 mqtt3 = Mqtt(app, config_prefix="MQTT3")

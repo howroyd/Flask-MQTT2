@@ -106,13 +106,13 @@ class Mqtt:
 
     def init_app(self, app: Flask, config_prefix : str = "MQTT") -> None:
         """Init the Flask-MQTT addon."""
-        
+
         if self.app is None:
             self.app = app
-        
+
         if config_prefix + "_CLIENT_ID" in app.config:
             self.client_id = app.config["MQTT_CLIENT_ID"]
-            
+
         if isinstance(self.client_id, unicode):
             self.client._client_id = self.client_id.encode("utf-8")
         else:
@@ -365,18 +365,18 @@ class Mqtt:
     def unsubscribe_all(self) -> None:
         """
         Unsubscribe from all topics.
-        
-        Returns True if all topics are unsubscribed from self.topics, otherwise False 
-        
+
+        Returns True if all topics are unsubscribed from self.topics, otherwise False
+
         """
         topics = list(self.topics.keys())
         for topic in topics:
             self.unsubscribe(topic)
-        
+
         if not len(self.topics):
             return True
         return False
-        
+
     def publish(
         self,
         topic: str,

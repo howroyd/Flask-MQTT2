@@ -155,6 +155,3 @@ texinfo_documents = [
      author, 'Flask-MQTT', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

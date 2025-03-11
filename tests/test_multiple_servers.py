@@ -21,11 +21,11 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.app = Flask(__name__)
         self.app.config['MQTT_USERNAME'] = 'mqtt'
         self.app.config['MQTT_PASSWORD'] = 'mqtt_server_one'
-        
+
         self.app.config['MQTT2_USERNAME'] = 'mqtt2'
         self.app.config['MQTT2_PASSWORD'] = 'mqtt_server_two'
         self.app.config['MQTT2_BROKER_PORT'] = 1885
-        
+
         self.app.config['MQTT3_USERNAME'] = 'mqtt3'
         self.app.config['MQTT3_PASSWORD'] = 'mqtt_server_three'
         self.app.config['MQTT3_BROKER_PORT'] = 1886
@@ -38,34 +38,34 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.mqtt = Mqtt(self.app)
         self.assertEqual(self.mqtt.username, 'mqtt')
         self.assertEqual(self.mqtt.password, 'mqtt_server_one')
-        
+
         self.mqtt._disconnect()
-    
+
     def test_connect_diff_config_prefix(self):
         self.mqtt = Mqtt(self.app, config_prefix="MQTT4")
         self.assertNotEqual(self.mqtt.username, 'mqtt')
         self.assertNotEqual(self.mqtt.password, 'mqtt_server_one')
         self.assertEqual(self.mqtt.username, None)
         self.assertEqual(self.mqtt.password, None)
-        
+
         self.mqtt._disconnect()
-    
+
     def test_connect_multiple_servers(self):
         self.mqtt = Mqtt(self.app, config_prefix="MQTT")
         self.mqtt2 = Mqtt(self.app, config_prefix="MQTT2")
         self.mqtt3 = Mqtt(self.app, config_prefix="MQTT3")
-        
+
         self.assertEqual('mqtt', self.mqtt.username)
         self.assertEqual('mqtt2', self.mqtt2.username)
         self.assertEqual('mqtt3', self.mqtt3.username)
         self.assertEqual(1883, self.mqtt.broker_port)
         self.assertEqual(1885, self.mqtt2.broker_port)
         self.assertEqual(1886, self.mqtt3.broker_port)
-        
+
         self.mqtt._disconnect()
         self.mqtt2._disconnect()
         self.mqtt3._disconnect()
-    
+
     def test_subscribe_multiple_servers(self):
         self.subscribe_handled_mqtt = False
         self.unsubscribe_handled_mqtt = False
@@ -73,31 +73,31 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.unsubscribe_handled_mqtt2 = False
         self.subscribe_handled_mqtt3 = False
         self.unsubscribe_handled_mqtt3 = False
-        
+
         self.mqtt = Mqtt(self.app, config_prefix="MQTT")
         self.mqtt2 = Mqtt(self.app, config_prefix="MQTT2")
         self.mqtt3 = Mqtt(self.app, config_prefix="MQTT3")
-        
+
         @self.mqtt.on_subscribe()
         def handle_subscribe(client, userdata, mid_, granted_qos):
             self.subscribe_handled_mqtt = True
-        
+
         @self.mqtt.on_unsubscribe()
         def handle_unsubscribe(client, userdata, mid_):
             self.unsubscribe_handled_mqtt = True
-        
+
         @self.mqtt2.on_subscribe()
         def handle_subscribe(client, userdata, mid_, granted_qos):
             self.subscribe_handled_mqtt2 = True
-        
+
         @self.mqtt2.on_unsubscribe()
         def handle_unsubscribe(client, userdata, mid_):
             self.unsubscribe_handled_mqtt2 = True
-        
+
         @self.mqtt3.on_subscribe()
         def handle_subscribe(client, userdata, mid_, granted_qos):
             self.subscribe_handled_mqtt3 = True
-        
+
         @self.mqtt3.on_unsubscribe()
         def handle_unsubscribe(client, userdata, mid_):
             self.unsubscribe_handled_mqtt3 = True
@@ -110,7 +110,7 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.assertEqual(ret, MQTT_ERR_SUCCESS)
         wait()
         self.assertTrue(self.unsubscribe_handled_mqtt)
-        
+
         ret, _ = self.mqtt2.subscribe('mqtt2/test')
         self.assertEqual(ret, MQTT_ERR_SUCCESS)
         wait()
@@ -119,8 +119,8 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.assertEqual(ret, MQTT_ERR_SUCCESS)
         wait()
         self.assertTrue(self.unsubscribe_handled_mqtt2)
-        
-        
+
+
         ret, _ = self.mqtt3.subscribe('mqtt3/test')
         self.assertEqual(ret, MQTT_ERR_SUCCESS)
         wait()
@@ -130,11 +130,11 @@ class FlaskMQTTTestCase(unittest.TestCase):
         wait()
         self.assertTrue(self.unsubscribe_handled_mqtt3)
 
-        
+
         self.mqtt._disconnect()
         self.mqtt2._disconnect()
         self.mqtt3._disconnect()
-        
+
     def test_qos_multiple_servers(self):
         self.mqtt = Mqtt(self.app, config_prefix="MQTT")
         self.mqtt2 = Mqtt(self.app, config_prefix="MQTT2")
@@ -154,7 +154,7 @@ class FlaskMQTTTestCase(unittest.TestCase):
         # unsubscribe
         self.mqtt.unsubscribe('mqtt/test')
         self.assertEqual(0, len(self.mqtt.topics))
-        
+
         #### mqtt server two ####
         # subscribe to a topic with qos = 1
         self.mqtt2.subscribe('mqtt2/test', 1)
@@ -169,7 +169,7 @@ class FlaskMQTTTestCase(unittest.TestCase):
         # unsubscribe
         self.mqtt2.unsubscribe('mqtt2/test')
         self.assertEqual(0, len(self.mqtt2.topics))
-        
+
         #### mqtt server three ####
         # subscribe to a topic with qos = 1
         self.mqtt3.subscribe('mqtt3/test', 1)
@@ -184,47 +184,47 @@ class FlaskMQTTTestCase(unittest.TestCase):
         # unsubscribe
         self.mqtt3.unsubscribe('mqtt3/test')
         self.assertEqual(0, len(self.mqtt3.topics))
-        
+
         self.mqtt._disconnect()
         self.mqtt2._disconnect()
         self.mqtt3._disconnect()
-    
+
     def test_topic_count_multiple_servers(self):
         self.mqtt = Mqtt(self.app, config_prefix="MQTT")
         self.mqtt2 = Mqtt(self.app, config_prefix="MQTT2")
         self.mqtt3 = Mqtt(self.app, config_prefix="MQTT3")
-        
+
         self.mqtt.subscribe('mqtt/test1')
         self.mqtt.subscribe('mqtt/test2')
         self.assertEqual(2, len(self.mqtt.topics))
         self.mqtt.unsubscribe_all()
         self.assertEqual(0, len(self.mqtt.topics))
-        
+
         self.mqtt2.subscribe('mqtt2/test1')
         self.mqtt2.subscribe('mqtt2/test2')
         self.assertEqual(2, len(self.mqtt2.topics))
         self.mqtt2.unsubscribe_all()
         self.assertEqual(0, len(self.mqtt2.topics))
-        
+
         self.mqtt3.subscribe('mqtt3/test1')
         self.mqtt3.subscribe('mqtt3/test2')
         self.assertEqual(2, len(self.mqtt3.topics))
         self.mqtt3.unsubscribe_all()
         self.assertEqual(0, len(self.mqtt3.topics))
-        
+
         self.mqtt._disconnect()
         self.mqtt2._disconnect()
         self.mqtt3._disconnect()
-    
+
     def test_publish_multiple_servers(self):
         self.mqtt = Mqtt(self.app, config_prefix="MQTT")
         self.mqtt2 = Mqtt(self.app, config_prefix="MQTT2")
         self.mqtt3 = Mqtt(self.app, config_prefix="MQTT3")
-        
+
         ###### mqtt server one ######
         self.handled_message_mqtt = False
         self.handled_publish_mqtt = False
-    
+
         @self.mqtt.on_message()
         def handle_message(client, userdata, message):
             self.handled_message_mqtt = True
@@ -241,11 +241,11 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.assertTrue(self.handled_message_mqtt)
         self.assertTrue(self.handled_publish_mqtt)
         self.mqtt._disconnect()
-        
+
         ###### mqtt server two ######
         self.handled_message_mqtt = False
         self.handled_publish_mqtt = False
-    
+
         @self.mqtt2.on_message()
         def handle_message(client, userdata, message):
             self.handled_message_mqtt = True
@@ -262,11 +262,11 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.assertTrue(self.handled_message_mqtt)
         self.assertTrue(self.handled_publish_mqtt)
         self.mqtt2._disconnect()
-        
+
         ###### mqtt server two ######
         self.handled_message_mqtt = False
         self.handled_publish_mqtt = False
-    
+
         @self.mqtt3.on_message()
         def handle_message(client, userdata, message):
             self.handled_message_mqtt = True
@@ -294,13 +294,13 @@ class FlaskMQTTTestCase(unittest.TestCase):
             self.assertIsNotNone(client)
             self.assertIsNotNone(level)
             self.assertIsNotNone(buf)
-        
+
         @self.mqtt2.on_log()
         def handle_logging(client, userdata, level, buf):
             self.assertIsNotNone(client)
             self.assertIsNotNone(level)
             self.assertIsNotNone(buf)
-        
+
         @self.mqtt3.on_log()
         def handle_logging(client, userdata, level, buf):
             self.assertIsNotNone(client)
@@ -310,17 +310,17 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.mqtt.publish('mqtt/test', 'hello mqtt')
         self.mqtt.publish('mqtt2/test', 'hello mqtt2')
         self.mqtt.publish('mqtt3/test', 'hello mqtt3')
-    
+
         self.mqtt._disconnect()
         self.mqtt2._disconnect()
         self.mqtt3._disconnect()
-    
+
     def test_disconnect_multiple_servers(self):
         self.mqtt = Mqtt()
         self.mqtt2 = Mqtt()
         self.mqtt3 = Mqtt()
         self.connected = False
-        
+
         ###### mqtt server one ######
         @self.mqtt.on_connect()
         def handle_connect(*args, **kwargs):
@@ -329,7 +329,7 @@ class FlaskMQTTTestCase(unittest.TestCase):
         @self.mqtt.on_disconnect()
         def handle_disconnect(*args, **kwargs):
             self.connected = False
-        
+
         self.assertFalse(self.connected)
         self.mqtt.init_app(self.app)
         wait()
@@ -337,7 +337,7 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.mqtt._disconnect()
         wait()
         self.assertFalse(self.connected)
-        
+
         ###### mqtt server two ######
         @self.mqtt2.on_connect()
         def handle_connect(*args, **kwargs):
@@ -346,7 +346,7 @@ class FlaskMQTTTestCase(unittest.TestCase):
         @self.mqtt2.on_disconnect()
         def handle_disconnect(*args, **kwargs):
             self.connected = False
-        
+
         self.assertFalse(self.connected)
         self.mqtt2.init_app(self.app, config_prefix="MQTT2")
         wait()
@@ -354,7 +354,7 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.mqtt2._disconnect()
         wait()
         self.assertFalse(self.connected)
-        
+
         ###### mqtt server one ######
         @self.mqtt3.on_connect()
         def handle_connect(*args, **kwargs):
@@ -363,7 +363,7 @@ class FlaskMQTTTestCase(unittest.TestCase):
         @self.mqtt3.on_disconnect()
         def handle_disconnect(*args, **kwargs):
             self.connected = False
-        
+
         self.assertFalse(self.connected)
         self.mqtt3.init_app(self.app, config_prefix="MQTT3")
         wait()
@@ -371,7 +371,6 @@ class FlaskMQTTTestCase(unittest.TestCase):
         self.mqtt3._disconnect()
         wait()
         self.assertFalse(self.connected)
-    
+
 if __name__ == "__main__":
     unittest.main()
-    

@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## **1.2.0**
 
 ### Added
-* Github action for continuous integration. 
+* Github action for continuous integration.
 
     The workflow installs Python dependencies, run tests and lint with a single version of Python
     For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
@@ -25,7 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * [Fixed topic population in subscribe() for tuple/list type topics](https://github.com/stlehmann/Flask-MQTT/commit/9d6c2e99db769476f08a3c6cfdaf9bbc6ddca2f2)
 
 * [correction on init_app()](https://github.com/stlehmann/Flask-MQTT/commit/f889437de6a1cbef2cde093c1f94d3785a43d179)
-    
+
     `Mqtt.init_app(self, app: Flask, ···)` now assigns `app` to `self.app` if this one is None.
 
 * Dependabot updates
@@ -36,7 +36,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 ### Changed
-* fixed issue [#76](https://github.com/stlehmann/Flask-MQTT/issues/76) 
+* fixed issue [#76](https://github.com/stlehmann/Flask-MQTT/issues/76)
 * [#77](https://github.com/stlehmann/Flask-MQTT/pull/77) Pass client id to MQTT client
 
 ### Removed

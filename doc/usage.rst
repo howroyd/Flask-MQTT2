@@ -198,8 +198,8 @@ messages and publish messages.
     def handle_subscribe(json_str):
         data = json.loads(json_str)
         mqtt.subscribe(data['topic'])
-    
-    
+
+
     @socketio.on('unsubscribe_all')
     def handle_unsubscribe_all():
         mqtt.unsubscribe_all()
@@ -225,4 +225,3 @@ messages and publish messages.
 
 .. _Flask application object: http://flask.pocoo.org/docs/0.12/api/#application-object
 .. _Flask-SocketIO: https://flask-socketio.readthedocs.io/en/latest/
-

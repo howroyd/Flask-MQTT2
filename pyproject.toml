@@ -3,7 +3,7 @@ requires = ["pytest", "pytest-cov", "setuptools>=70", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Flask-MQTT2"
+name = "flask_mqtt2"
 version = "2.0.0-dev0"
 requires-python = ">=3.11"
 authors = [
@@ -37,8 +37,8 @@ dynamic = ["dependencies"]
 dependencies = { file = ["requirements.in"] }
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "ruff"]
-example = ["eventlet", "Flask", "Flask-Bootstrap", "Flask-MQTT", "Flask-SocketIO"]
+dev = ["pre-commit", "pytest", "pytest-cov", "ruff"]
+example = ["eventlet", "Flask", "Flask-Bootstrap", "Flask-SocketIO"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
