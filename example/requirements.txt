@@ -1,5 +1,0 @@
-eventlet
-Flask
-Flask-Bootstrap
-Flask-MQTT
-Flask-SocketIO
