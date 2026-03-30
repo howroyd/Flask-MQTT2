@@ -89,7 +89,7 @@ pytz==2019.1
     # via babel
 readme-renderer==24.0
     # via twine
-requests==2.31.0
+requests==2.33.0
     # via
     #   coveralls
     #   requests-toolbelt
